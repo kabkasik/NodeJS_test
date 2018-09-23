@@ -1,0 +1,8 @@
+version: '3'
+services:
+  hwww:
+    build: ./web
+    ports:
+    - "80:80"
+    volumes:
+    - ./http-service:/app
