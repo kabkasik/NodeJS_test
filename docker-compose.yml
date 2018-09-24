@@ -4,7 +4,12 @@ services:
     build: ./web
     ports:
     - "80:80"
+    depends_on:
+    - db
     environment:
+    - DATABASE_HOST=db
     - PORT=80
     volumes:
     - ./web:/app
+  db:
+    build: ./db
