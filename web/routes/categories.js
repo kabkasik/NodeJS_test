@@ -4,27 +4,41 @@ var router = express.Router();
 var nameCategory = "category";
 var nameProduct = "product";
 
+var DataBaseHandler = require("../db/MysqlHandler");
+var dataBaseHandler = new  DataBaseHandler();
+var connection = dataBaseHandler.createConnection();
+
 router.get('/', function(req, res, next) {
-    res.status(200).json([
-        { id: 1, name: "Food", products_count: 9 },
-        { id: 2, name: "Drink",products_count: 4 }
-    ]);
+    connection.query('SELECT `id`, `name`, `products_count` FROM `categories` LIMIT 10000', function (error, result, fields) {
+        if (error) throw error;
+        var objs = JSON.parse(JSON.stringify(result));
+        res.status(200).json(objs);
+    });
 });
 router.post('/', function(req, res, next) {
-    if(req.body[nameCategory] == undefined || req.body[nameCategory]["name"] == undefined || typeof(req.body[nameCategory]["name"]) != 'string'){
+    if (req.body[nameCategory] == undefined || req.body[nameCategory]["name"] == undefined || typeof(req.body[nameCategory]["name"]) != 'string') {
         res.status(400).end();
         return;
     }
-
-    console.log("added new category: "+req.body[nameCategory]["name"]);
-    res.status(201).end();
+    connection.query('SELECT `name` FROM `categories` WHERE `name` = "' + req.body[nameCategory]["name"] + '" LIMIT 10000', function (error, result, fields) {
+        if (error) throw error;
+        if (result.length > 0) {
+            res.status(409).end();
+            return;
+        }
+        connection.query("INSERT INTO `categories` (`name`) VALUES ('"+req.body[nameCategory]["name"]+"')", function (error, result, fields) {
+            if (error) throw error;
+            res.status(201).end();
+        });
+    });
 });
 router.get('/:id/products', function(req, res, next) {
     console.log("category id:" + req.params.id);
-    res.status(200).json([
-        { id: 1, name: "Beef", price: 42.69 },
-        { id: 2, name: "Cookies",price: 69.42 }
-    ]);
+    connection.query('SELECT `id`, `name`, `price` FROM `products` WHERE `categories_id` = '+req.params.id+' LIMIT 10000', function (error, result, fields) {
+        if (error) throw error;
+        var objs = JSON.parse(JSON.stringify(result));
+        res.status(200).json(objs);
+    });
 });
 router.post('/:id/products', function(req, res, next) {
     console.log("category id:" + req.params.id);
@@ -40,8 +54,22 @@ router.post('/:id/products', function(req, res, next) {
         res.status(400).end();
         return;
     }
+
     var name = product["name"];
     var price = product["price"];
+
+    connection.query('SELECT `id`, `name`, `price` FROM `products` WHERE `categories_id` = '+req.params.id+' AND `name` = "'+name+'" LIMIT 10000', function (error, result, fields) {
+        if (error) throw error;
+        if (result.length > 0) {
+            res.status(409).end();
+            return;
+        }
+        connection.query("INSERT INTO `products` (`name`, `categories_id`, `price`) VALUES ('"+name+"', "+req.params.id+", "+price+")", function (error, result, fields) {
+            if (error) throw error;
+            res.status(201).end();
+        });
+    });
+
     console.log(name + " - " + price);
     res.status(201).end();
 });
