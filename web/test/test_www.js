@@ -11,7 +11,7 @@ describe("Test http request", function () {
         request(app)
             .post('/categories')
             .type('json')
-            .send({'category:': { name: "Candy" }})
+            .send({'category': { name: "Candy" }})
             .expect(201, done)
     });
     it('Show products list from category', function (done) {
@@ -23,7 +23,7 @@ describe("Test http request", function () {
         request(app)
             .post('/categories/1/products')
             .type('json')
-            .send({'product:': { name: "Butter" , price: 2.6}})
+            .send({'product': { name: "Butter" , price: 2.6}})
             .expect(201, done)
     });
     it('Delete product from category', function (done) {
