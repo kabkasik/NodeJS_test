@@ -57,6 +57,27 @@ describe("Create a new product in the category", function () {
             .send({'product': { name: "Butter" , price: 2.6}})
             .expect(201, done)
     });
+    it('bad json', function (done) {
+        request(app)
+            .post('/categories/1/products')
+            .type('json')
+            .send({'pruct': { name: "Btter" , price: 2.6}})
+            .expect(400, done)
+    });
+    it('bad category int>0', function (done) {
+        request(app)
+            .post('/categories/-50/products')
+            .type('json')
+            .send({'product': { name: "Butter" , price: 2.6}})
+            .expect(400, done)
+    });
+    it('bad category non int', function (done) {
+        request(app)
+            .post('/categories/sdf/products')
+            .type('json')
+            .send({'product': { name: "Butter" , price: 2.6}})
+            .expect(400, done)
+    });
 });
 describe("Delete product from category", function () {
     it('correct id', function (done) {

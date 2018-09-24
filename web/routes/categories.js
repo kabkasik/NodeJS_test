@@ -33,12 +33,12 @@ router.post('/', function(req, res, next) {
     });
 });
 router.get('/:id/products', function(req, res, next) {
-    var number = Number(req.params.id);
-    if(isNaN(number) || number<=0){
+    var number_id = Number(req.params.id);
+    if(isNaN(number_id) || number_id<=0){
         res.status(400).end();
         return;
     }
-    connection.query('SELECT `id`, `name`, `price` FROM `products` WHERE `categories_id` = '+number+' LIMIT 10000', function (error, result, fields) {
+    connection.query('SELECT `id`, `name`, `price` FROM `products` WHERE `categories_id` = '+number_id+' LIMIT 10000', function (error, result, fields) {
         if (error) throw error;
         var objs = JSON.parse(JSON.stringify(result));
         res.status(200).json(objs);
@@ -46,6 +46,13 @@ router.get('/:id/products', function(req, res, next) {
 });
 router.post('/:id/products', function(req, res, next) {
     console.log("category id:" + req.params.id);
+
+    var number_id = Number(req.params.id);
+    if(isNaN(number_id) || number_id<=0){
+        res.status(400).end();
+        return;
+    }
+
 
     var product = req.body[nameProduct];
     if(product == undefined
@@ -62,13 +69,13 @@ router.post('/:id/products', function(req, res, next) {
     var name = product["name"];
     var price = product["price"];
 
-    connection.query('SELECT `id`, `name`, `price` FROM `products` WHERE `categories_id` = '+req.params.id+' AND `name` = "'+name+'" LIMIT 10000', function (error, result, fields) {
+    connection.query('SELECT `id`, `name`, `price` FROM `products` WHERE `categories_id` = '+number_id+' AND `name` = "'+name+'" LIMIT 10000', function (error, result, fields) {
         if (error) throw error;
         if (result.length > 0) {
             res.status(409).end();
             return;
         }
-        connection.query("INSERT INTO `products` (`name`, `categories_id`, `price`) VALUES ('"+name+"', "+req.params.id+", "+price+")", function (error, result, fields) {
+        connection.query("INSERT INTO `products` (`name`, `categories_id`, `price`) VALUES ('"+name+"', "+number_id+", "+price+")", function (error, result, fields) {
             if (error) throw error;
             res.status(201).end();
         });
