@@ -44,6 +44,9 @@ router.get('/:id/products', function(req, res, next) {
     connection.query('SELECT `id`, `name`, `price` FROM `products` WHERE `categories_id` = '+number_id+' LIMIT 10000', function (error, result, fields) {
         if (error) throw error;
         var objs = JSON.parse(JSON.stringify(result));
+        objs.forEach(function(element){
+            element.price /= 100;
+        });
         res.status(200).json(objs);
     });
 });
@@ -70,7 +73,7 @@ router.post('/:id/products', function(req, res, next) {
     }
 
     var name = product["name"];
-    var price = product["price"];
+    var price = Math.round(product["price"]*10);
 
     connection.query('SELECT `id`, `name`, `price` FROM `products` WHERE `categories_id` = '+number_id+' AND `name` = "'+name+'" LIMIT 10000', function (error, result, fields) {
         if (error) throw error;
