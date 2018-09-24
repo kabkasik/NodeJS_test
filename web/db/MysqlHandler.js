@@ -10,7 +10,7 @@ MysqlHandler.prototype.createConnection = function () {
 
     this.connection = mysql.createConnection({
         host: process.env.DATABASE_HOST || '127.0.0.1',
-        user: 'root',
+        user: 'test',
         password: '1234',
         database: 'test',
         port: 3306
