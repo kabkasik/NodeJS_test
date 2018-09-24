@@ -9,7 +9,10 @@ var dataBaseHandler = new  DataBaseHandler();
 var connection = dataBaseHandler.createConnection();
 
 router.get('/', function(req, res, next) {
-    connection.query('SELECT `id`, `name`, `products_count` FROM `categories` LIMIT 10000', function (error, result, fields) {
+    connection.query('SELECT  a.id, a.name , (SELECT Count(id) FROM `products` WHERE `categories_id` = `a`.`id`) as products_count\n' +
+        'FROM categories a\n' +
+        'ORDER BY name ASC' +
+        ' LIMIT 10000', function (error, result, fields) {
         if (error) throw error;
         var objs = JSON.parse(JSON.stringify(result));
         res.status(200).json(objs);

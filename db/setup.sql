@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Сен 24 2018 г., 04:46
+-- Время создания: Сен 24 2018 г., 07:27
 -- Версия сервера: 5.5.59-0+deb8u1
 -- Версия PHP: 5.6.33-0+deb8u1
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- База данных: `test`
 --
+CREATE DATABASE IF NOT EXISTS `test` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+USE `test`;
 
 -- --------------------------------------------------------
 
@@ -26,19 +28,19 @@ SET time_zone = "+00:00";
 -- Структура таблицы `categories`
 --
 
+DROP TABLE IF EXISTS `categories`;
 CREATE TABLE IF NOT EXISTS `categories` (
 `id` int(11) NOT NULL,
-  `name` varchar(40) COLLATE utf8_bin NOT NULL,
-  `products_count` int(11) NOT NULL DEFAULT '0'
+  `name` varchar(40) COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Дамп данных таблицы `categories`
 --
 
-INSERT INTO `categories` (`id`, `name`, `products_count`) VALUES
-(1, 'food', 1),
-(2, 'drink', 1);
+INSERT INTO `categories` (`id`, `name`) VALUES
+(1, 'food'),
+(2, 'drink');
 
 -- --------------------------------------------------------
 
@@ -46,6 +48,7 @@ INSERT INTO `categories` (`id`, `name`, `products_count`) VALUES
 -- Структура таблицы `products`
 --
 
+DROP TABLE IF EXISTS `products`;
 CREATE TABLE IF NOT EXISTS `products` (
 `id` int(11) NOT NULL,
   `categories_id` int(11) DEFAULT NULL,
@@ -58,8 +61,8 @@ CREATE TABLE IF NOT EXISTS `products` (
 --
 
 INSERT INTO `products` (`id`, `categories_id`, `name`, `price`) VALUES
-(1, 1, 'Beef', 4269),
-(2, 1, 'Cookies', 69);
+(1, 2, 'Beef', 4269),
+(2, 2, 'Cookies', 6942);
 
 --
 -- Индексы сохранённых таблиц
@@ -85,7 +88,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT для таблицы `categories`
 --
 ALTER TABLE `categories`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT для таблицы `products`
 --

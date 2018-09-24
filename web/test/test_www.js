@@ -15,10 +15,10 @@ describe("Create a new category", function () {
             .type('json')
             .send({'category': {name: "Candy"}})
             .end(function(err, res) {
-                if(res.status==409 || res.status==200) {
+                if(res.status==409 || res.status==201) {
                     done();
                 }else{
-                    throw new Error('Error create a new category');
+                    throw new Error('Error '+res.status+' create a new category');
                 }
             });
 
