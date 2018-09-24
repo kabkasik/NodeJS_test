@@ -38,6 +38,16 @@ describe("Show products list from category", function () {
             .get("/categories/1/products")
             .expect(200, done)
     });
+    it('get not int', function (done) {
+        request(app)
+            .get("/categories/gf/products")
+            .expect(400, done)
+    });
+    it('get <0', function (done) {
+        request(app)
+            .get("/categories/-2/products")
+            .expect(400, done)
+    });
 });
 describe("Create a new product in the category", function () {
     it('correct json', function (done) {

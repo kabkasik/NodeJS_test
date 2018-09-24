@@ -33,8 +33,12 @@ router.post('/', function(req, res, next) {
     });
 });
 router.get('/:id/products', function(req, res, next) {
-    console.log("category id:" + req.params.id);
-    connection.query('SELECT `id`, `name`, `price` FROM `products` WHERE `categories_id` = '+req.params.id+' LIMIT 10000', function (error, result, fields) {
+    var number = Number(req.params.id);
+    if(isNaN(number) || number<=0){
+        res.status(400).end();
+        return;
+    }
+    connection.query('SELECT `id`, `name`, `price` FROM `products` WHERE `categories_id` = '+number+' LIMIT 10000', function (error, result, fields) {
         if (error) throw error;
         var objs = JSON.parse(JSON.stringify(result));
         res.status(200).json(objs);
